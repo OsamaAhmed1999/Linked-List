@@ -14,7 +14,7 @@ void main()
 	insert(&root , 80);
 	insert(&root , 70);
 	insert(&root , 11);
-	insert(&root , 35);
+	insert(&root , 36);
 	insert(&root , 96);
 	insert(&root , 119);
 	insert(&root , 23);
@@ -22,13 +22,15 @@ void main()
 	insert(&root , 76);
 	insert(&root , 230);
     insert(&root , 78);
+    insert(&root , 75);
 
 	print(root);
 	deletee(&root , 70);
 	printf("\n\n");
-    printt(root);
-	search(root , 80);
+	print(root);
+	//search(root , 70);
 }
+
 
 void deletee(struct BTnode **root , int data)
 {
@@ -57,12 +59,20 @@ void deletee(struct BTnode **root , int data)
                 curr = curr->leftchild;
             }
         }
-
         if(curr->data == data)
         {
             if(curr->leftchild == NULL && curr->rightchild == NULL)
             {
-                free(curr);
+                if(prev->leftchild != NULL && (prev->leftchild)->data == data)
+                {
+                    prev->leftchild = NULL;
+                    free(curr);
+                }
+                else
+                {
+                    prev->rightchild = NULL;
+                    free(curr);
+                }
             }
             else if(curr->leftchild != NULL && curr->rightchild == NULL)
             {
@@ -76,27 +86,59 @@ void deletee(struct BTnode **root , int data)
             }
             else
             {
-                if(curr->data < (*root)->data)
+                struct BTnode *currr = curr->leftchild;
+                struct BTnode *greater = currr;
+                struct BTnode *prev_greater;
+                prev = curr;
+                while(currr != NULL)
                 {
-                    struct BTnode *temp = curr->rightchild;
-                    while(temp->leftchild != NULL)
+                    if(currr->data >= greater->data)
                     {
-                        temp = temp->leftchild;
+                        prev_greater = prev;
+                        greater = currr;
                     }
-                    temp->leftchild = curr->leftchild;
-                    prev->leftchild = curr->rightchild;
-                    free(curr);
+                    if(currr->leftchild == NULL && currr->rightchild == NULL)
+                    {
+                        break;
+                    }
+                    if(currr->rightchild != NULL)
+                    {
+                        prev = currr;
+                        currr = currr->rightchild;
+                    }
+                    else
+                    {
+                        prev = currr;
+                        currr = currr->leftchild;
+                    }
+                }
+
+                curr->data = greater->data;
+                if(greater->leftchild != NULL)
+                {
+                    if((prev_greater->rightchild)->data == greater->data)
+                    {
+                        prev_greater->rightchild = greater->leftchild;
+                        free(greater);
+                    }
+                    else
+                    {
+                        prev_greater->leftchild = greater->leftchild;
+                        free(greater);
+                    }
                 }
                 else
                 {
-                    struct BTnode *temp = curr->rightchild;
-                    while(temp->leftchild != NULL)
+                    if((prev_greater->rightchild)->data == greater->data)
                     {
-                        temp = temp->leftchild;
+                        prev_greater->rightchild = NULL;
+                        free(greater);
                     }
-                    temp->leftchild = curr->leftchild;
-                    prev->rightchild = curr->rightchild;
-                    free(curr);
+                    else
+                    {
+                        prev_greater->leftchild = NULL;
+                        free(greater);
+                    }
                 }
             }
         }
@@ -180,7 +222,16 @@ void search(struct BTnode *root , int data)
 
 void print(struct BTnode *root)
 {
-	printf("root %d\n\n" , root->data);
+    if(root != NULL)
+    {
+        print(root->leftchild);
+        printf("%d\n" , root->data);
+        print(root->rightchild);
+    }
+}
+
+/**PRINT
+    printf("root %d\n\n" , root->data);
 	printf("L %d\n" , (root->leftchild)->data);
 	printf("LR %d\n" , ((root->leftchild)->rightchild)->data);
 	printf("LRR %d\n" , (((root->leftchild)->rightchild)->rightchild)->data);
@@ -189,20 +240,28 @@ void print(struct BTnode *root)
 	printf("R %d\n" , (root->rightchild)->data);
 	//printf("RR %d\n" , ((root->rightchild)->rightchild)->data);
 	printf("RR %d\n" , ((root->rightchild)->rightchild)->data);
-	printf("RRR %d\n" , (((root->rightchild)->rightchild)->rightchild)->data);
-}
+	printf("RRR %d\n" , (((root->rightchild)->rightchild)->rightchild)->data);**/
 
-void printt(struct BTnode *root)
+/**DELETE 1
+if(curr->data < (*root)->data)
 {
-    printf("root %d\n\n" , root->data);
-	printf("L %d\n" , (root->leftchild)->data);
-	printf("LR %d\n" , ((root->leftchild)->rightchild)->data);
-	//printf("LRR %d\n" , (((root->leftchild)->rightchild)->rightchild)->data);
-	printf("LL %d\n" , ((root->leftchild)->leftchild)->data);
-	printf("LLRL %d\n" , ((((root->leftchild)->leftchild)->rightchild)->leftchild)->data);
-
-	printf("R %d\n" , (root->rightchild)->data);
-	//printf("RL %d\n" , ((root->rightchild)->leftchild)->data);
-	printf("RR %d\n" , ((root->rightchild)->rightchild)->data);
-	printf("RRR %d\n" , (((root->rightchild)->rightchild)->rightchild)->data);
+    struct BTnode *temp = curr->rightchild;
+    while(temp->leftchild != NULL)
+    {
+        temp = temp->leftchild;
+    }
+    temp->leftchild = curr->leftchild;
+    prev->leftchild = curr->rightchild;
+    free(curr);
 }
+else
+{
+    struct BTnode *temp = curr->rightchild;
+    while(temp->leftchild != NULL)
+    {
+        temp = temp->leftchild;
+    }
+    temp->leftchild = curr->leftchild;
+    prev->rightchild = curr->rightchild;
+    free(curr);
+}*/
