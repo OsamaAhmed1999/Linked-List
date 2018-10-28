@@ -43,36 +43,7 @@ int insert(int *array , int value , int i)
     }
 }
 
-void sortt(int *array , int *sort , int size)
-{
-    int i , j;
-    for(i = 0; i <= size; i++)
-    {
-        int temp = array[0];
-        array[0] = array[size-i];
-        array[size-i] = temp;
 
-        sort[i] = array[size-i];
-        array[size-i] = -1;
-        j = 0;;
-        while(j < size/2)
-        {
-            if(array[2*j+1] > array[j] && array[2*j+1] > array[2*j+2])
-            {
-                int temp = array[j];
-                array[j] = array[2*j+1];
-                array[2*j+1] = temp;
-            }
-            else if(array[2*j+2] > array[j] && array[2*j+2] > array[2*j+1])
-            {
-                int temp = array[j];
-                array[j] = array[2*j+2];
-                array[2*j+2] = temp;
-            }
-            j++;
-        }
-    }
-}
 
 int main()
 {
@@ -89,12 +60,5 @@ int main()
     {
         scanf("%d" , &value);
         i = insert(array , value , i);
-    }
-    printf("\n\n");
-
-    sortt(array , sort , size-1);
-    for(i = 0; i < size; i++)
-    {
-        printf("%d\n" , sort[i]);
     }
 }
